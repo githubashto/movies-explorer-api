@@ -1,0 +1,39 @@
+{
+  "name": "movies-explorer-api",
+  "version": "1.0.0",
+  "description": "Дипломный проект",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js",
+    "lint": "npx eslint .",
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/githubashto/movies-explorer-api.git"
+  },
+  "keywords": [
+    "movies",
+    "API",
+    "Express.js"
+  ],
+  "author": "Nikolay Astakhayev",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/githubashto/movies-explorer-api/issues"
+  },
+  "homepage": "https://github.com/githubashto/movies-explorer-api#readme",
+  "dependencies": {
+    "celebrate": "^15.0.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "mongoose": "^5.13.2"
+  },
+  "devDependencies": {
+    "eslint": "^7.30.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-import": "^2.23.4",
+    "nodemon": "^2.0.11"
+  }
+}
