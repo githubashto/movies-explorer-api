@@ -32,7 +32,7 @@ module.exports.getMe = (req, res, next) => {
 
 module.exports.createUser = (req, res, next) => {
   const {
-    name, about, avatar, email,
+    name, email,
   } = req.body;
   bcrypt.hash(req.body.password, 10)
     .then((hash) => User.create({
