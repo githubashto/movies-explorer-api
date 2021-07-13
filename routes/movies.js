@@ -1,6 +1,8 @@
 const router = require('express').Router();
 const { celebrate, Joi } = require('celebrate');
 
+const errorMessages = require('../utils/utils');
+
 const {
   getMovies, createMovie, deleteMovie,
 } = require('../controllers/movies');
@@ -10,8 +12,8 @@ router.post('/', celebrate({
   body: Joi.object().keys({
     country: Joi.string().required(),
     director: Joi.string().required(),
-    duration: Joi.string().required(),
-    year: Joi.Joi.number().integer().required(),
+    duration: Joi.number().required(),
+    year: Joi.string().required(),
     description: Joi.string().required(),
     image: Joi.string().uri({
       scheme: /https?/,
@@ -25,17 +27,17 @@ router.post('/', celebrate({
     movieId: Joi.string().required(),
     nameRU: Joi.string().required(),
     nameEN: Joi.string().required(),
-    name: Joi.string().required().min(2).max(30),
   }),
 },
 {
   messages: {
-    'string.empty': 'Переданы некорректные данные при создании карточки.',
-    'string.min': 'Переданы некорректные данные при создании карточки.',
-    'string.max': 'Переданы некорректные данные при создании карточки.',
-    'any.required': 'Переданы некорректные данные при создании карточки.',
-    'string.uri': 'Переданы некорректные данные при создании карточки.',
-    'string.uriCustomScheme': 'Переданы некорректные данные при создании карточки.',
+    'string.empty': errorMessages.validErrMovieCreate,
+    'string.min': errorMessages.validErrMovieCreate,
+    'string.max': errorMessages.validErrMovieCreate,
+    'any.required': errorMessages.validErrMovieCreate,
+    'string.base': errorMessages.validErrMovieCreate,
+    'string.uri': errorMessages.validErrMovieCreate,
+    'string.uriCustomScheme': errorMessages.validErrMovieCreate,
   },
 }), createMovie);
 router.delete('/:movieId', deleteMovie);

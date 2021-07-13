@@ -8,26 +8,27 @@ const AuthError = require('../errors/auth-err');
 const NotFoundError = require('../errors/not-found-err');
 const ConflictError = require('../errors/conflict-err');
 
+const errorMessages = require('../utils/utils');
+
 module.exports.getMe = (req, res, next) => {
   User.findById(req.user._id)
     .orFail()
     .select('name email')
     .then((user) => {
       if (!user) {
-        throw new AuthError('Необходима авторизация.');
+        throw new AuthError(errorMessages.authErrDefault);
       }
       res.send(user);
     })
     .catch((err) => {
       if (err.name === 'DocumentNotFoundError') {
-        throw new NotFoundError('Пользователь по указанному _id не найден.');
+        next(new NotFoundError(errorMessages.notfoundErrUser));
       } else if (err.name === 'CastError') {
-        throw new ValidationError('Некорректный _id.');
+        next(new ValidationError(errorMessages.validErrCast));
       } else {
-        throw err;
+        next(err);
       }
-    })
-    .catch(next);
+    });
 };
 
 module.exports.createUser = (req, res, next) => {
@@ -37,18 +38,17 @@ module.exports.createUser = (req, res, next) => {
   bcrypt.hash(req.body.password, 10)
     .then((hash) => User.create({
       name, email, password: hash,
-    }))
-    .then((user) => res.send(user))
-    .catch((err) => {
-      if (err.name === 'ValidationError') {
-        throw new ValidationError('Переданы некорректные данные при создании пользователя.');
-      } else if (err.name === 'MongoError' && err.code === 11000) {
-        throw new ConflictError('Вы уже регистрировались.');
-      } else {
-        throw err;
-      }
     })
-    .catch(next);
+      .then((user) => res.send(user))
+      .catch((err) => {
+        if (err.name === 'ValidationError') {
+          next(new ValidationError(errorMessages.validErrUserCreate));
+        } else if (err.name === 'MongoError' && err.code === 11000) {
+          next(new ConflictError(errorMessages.conflictErrCreate));
+        } else {
+          next(err);
+        }
+      }));
 };
 
 const { JWT_SECRET = '0de50296aeea456249151bd8278d04515e1f6a8d490db398ad285b0c3eec9676' } = process.env;
@@ -69,7 +69,7 @@ module.exports.login = (req, res, next) => {
 module.exports.updateUserInfo = (req, res, next) => {
   const { name, email } = req.body;
   if (!name || !email) {
-    throw new ValidationError('Переданы некорректные данные при обновлении пользователя.');
+    throw new ValidationError(errorMessages.validErrUserEdit);
   }
   User.findByIdAndUpdate(
     req.user._id,
@@ -80,20 +80,21 @@ module.exports.updateUserInfo = (req, res, next) => {
     .select('name email')
     .then((user) => {
       if (!user) {
-        throw new NotFoundError('Пользователь с указанным _id не найден.');
+        throw new NotFoundError(errorMessages.notfoundErrUser);
       }
       res.send(user);
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        throw new ValidationError('Переданы некорректные данные при обновлении пользователя.');
+        next(new ValidationError(errorMessages.validErrUserEdit));
       } else if (err.name === 'DocumentNotFoundError') {
-        throw new NotFoundError('Пользователь по указанному _id не найден.');
+        next(new NotFoundError(errorMessages.notfoundErrUser));
       } else if (err.name === 'CastError') {
-        throw new ValidationError('Некорректный _id.');
+        next(new ValidationError(errorMessages.validErrCast));
+      } else if (err.name === 'MongoError' && err.code === 11000) {
+        next(new ConflictError(errorMessages.conflictErrEdit));
       } else {
-        throw err;
+        next(err);
       }
-    })
-    .catch(next);
+    });
 };

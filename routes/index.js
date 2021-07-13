@@ -6,6 +6,8 @@ const auth = require('../middlewares/auth');
 
 const NotFoundError = require('../errors/not-found-err');
 
+const errorMessages = require('../utils/utils');
+
 const {
   createUser, login,
 } = require('../controllers/users');
@@ -19,11 +21,11 @@ router.post('/signup', celebrate({
 },
 {
   messages: {
-    'string.empty': 'Переданы некорректные данные при создании пользователя.',
-    'string.min': 'Переданы некорректные данные при создании пользователя.',
-    'string.max': 'Переданы некорректные данные при создании пользователя.',
-    'any.required': 'Переданы некорректные данные при создании пользователя.',
-    'string.email': 'Переданы некорректные данные при создании пользователя.',
+    'string.empty': errorMessages.validErrUserCreate,
+    'string.min': errorMessages.validErrUserCreate,
+    'string.max': errorMessages.validErrUserCreate,
+    'any.required': errorMessages.validErrUserCreate,
+    'string.email': errorMessages.validErrUserCreate,
   },
 }), createUser);
 
@@ -35,9 +37,9 @@ router.post('/signin', celebrate({
 },
 {
   messages: {
-    'string.empty': 'Переданы некорректные данные при попытке входа.',
-    'any.required': 'Переданы некорректные данные при попытке входа.',
-    'string.email': 'Переданы некорректные данные при попытке входа.',
+    'string.empty': errorMessages.authErrWrong,
+    'any.required': errorMessages.authErrWrong,
+    'string.email': errorMessages.authErrWrong,
   },
 }), login);
 
@@ -46,7 +48,7 @@ router.use('/movies', require('./movies'));
 router.use('/users', require('./users'));
 
 router.use(() => {
-  throw new NotFoundError('Такой страницы нет.');
+  throw new NotFoundError(errorMessages.notfoundErrDefault);
 });
 
 module.exports = router;

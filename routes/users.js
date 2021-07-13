@@ -5,6 +5,8 @@ const {
   getMe, updateUserInfo,
 } = require('../controllers/users');
 
+const errorMessages = require('../utils/utils');
+
 router.get('/me', getMe);
 router.patch('/me', celebrate({
   body: Joi.object().keys({
@@ -14,10 +16,10 @@ router.patch('/me', celebrate({
 },
 {
   messages: {
-    'string.empty': 'Переданы некорректные данные при обновлении пользователя.',
-    'string.min': 'Переданы некорректные данные при обновлении пользователя.',
-    'string.max': 'Переданы некорректные данные при обновлении пользователя.',
-    'string.email': 'Переданы некорректные данные при обновлении пользователя.',
+    'string.empty': errorMessages.validErrUserEdit,
+    'string.min': errorMessages.validErrUserEdit,
+    'string.max': errorMessages.validErrUserEdit,
+    'string.email': errorMessages.validErrUserEdit,
   },
 }), updateUserInfo);
 

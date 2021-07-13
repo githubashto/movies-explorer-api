@@ -1,28 +1,43 @@
 const path = require('path');
 const express = require('express');
+
 const cors = require('cors');
 
 const corsOptions = {
-  origin: ['http://localhost:3001', 'http://nutag.nomoredomains.club', 'https://nutag.nomoredomains.club', 'http://www.nutag.nomoredomains.club', 'https://www.nutag.nomoredomains.club', 'http://178.154.229.30', 'https://178.154.229.30'],
+  origin: ['http://localhost:3001',
+    'http://urlag.nomoredomains.club',
+    'http://urlag.nomoredomains.club:3001',
+    'https://urlag.nomoredomains.club',
+    'https://urlag.nomoredomains.club:3001',
+    'http://www.urlag.nomoredomains.club',
+    'http://www.urlag.nomoredomains.club:3001',
+    'https://www.urlag.nomoredomains.club',
+    'https://www.urlag.nomoredomains.club:3001'],
   credentials: true,
   allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
 };
 
 require('dotenv').config();
 
-const { PORT = 3000 } = process.env;
-
-const { requestLogger, errorLogger } = require('./middlewares/logger');
+const { PORT = 3000, MONGO_URL = 'mongodb://localhost:27017/bitfilmsdb' } = process.env;
 
 const mongoose = require('mongoose');
 
 const { isCelebrateError } = require('celebrate');
 
+const helmet = require('helmet');
+
+const { requestLogger, errorLogger } = require('./middlewares/logger');
+
+const limiter = require('./middlewares/limiter');
+
 const router = require('./routes/index');
 
 const app = express();
 
-mongoose.connect('mongodb://localhost:27017/bitfilmsdb', {
+const errorMessages = require('./utils/utils');
+
+mongoose.connect(MONGO_URL, {
   useNewUrlParser: true,
   useCreateIndex: true,
   useFindAndModify: false,
@@ -33,10 +48,14 @@ app.use(express.urlencoded({
   extended: true,
 }));
 
+app.use(helmet());
+
 app.use(requestLogger);
 
+app.use(limiter);
+
 app.use(cors(corsOptions));
-app.use('/', router);
+app.use(router);
 
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -44,7 +63,6 @@ app.use(errorLogger);
 
 app.use((err, req, res, next) => {
   let { statusCode = 500, message } = err;
-
   if (isCelebrateError(err)) {
     statusCode = 400;
     const errorBody = err.details.get('body');
@@ -54,7 +72,7 @@ app.use((err, req, res, next) => {
   res.status(statusCode)
     .send({
       message: statusCode === 500
-        ? 'На сервере произошла ошибка'
+        ? errorMessages.serverErrDefault
         : message,
     });
   next();
