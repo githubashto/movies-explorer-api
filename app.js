@@ -19,21 +19,21 @@ const corsOptions = {
 
 require('dotenv').config();
 
-const { PORT = 3000, MONGO_URL = 'mongodb://localhost:27017/bitfilmsdb' } = process.env;
-
-const mongoose = require('mongoose');
+const { PORT = 3000 } = process.env;
 
 const helmet = require('helmet');
 
+const mongoose = require('mongoose');
+const { MONGO_URL } = require('./config');
+
 const { requestLogger, errorLogger } = require('./middlewares/logger');
+const errorHandler = require('./middlewares/error-handler');
 
 const limiter = require('./middlewares/limiter');
 
 const router = require('./routes/index');
 
 const app = express();
-
-const errorHandler = require('./middlewares/error-handler');
 
 mongoose.connect(MONGO_URL, {
   useNewUrlParser: true,

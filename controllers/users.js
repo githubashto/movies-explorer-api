@@ -51,7 +51,7 @@ module.exports.createUser = (req, res, next) => {
       }));
 };
 
-const { JWT_SECRET = '0de50296aeea456249151bd8278d04515e1f6a8d490db398ad285b0c3eec9676' } = process.env;
+const { JWT_SECRET } = require('../config');
 
 module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
