@@ -9,6 +9,8 @@ const errorMessages = {
   validErrUserCreate: 'Переданы некорректные данные при регистрации пользователя.',
   validErrUserEdit: 'Переданы некорректные данные при обновлении профиля.',
   validErrMovieCreate: 'Переданы некорректные данные при добавлении фильма.',
+  validErrUrl: 'Некорректная ссылка.',
+  validErrUserEmail: 'Некорректный email.',
   conflictErrCreate: 'Вы уже регистрировались.',
   conflictErrEdit: 'Такой email уже занят.',
   forbidErrMovie: 'Фильм с указанным _id не найден.',

@@ -25,7 +25,7 @@ router.post('/signup', celebrate({
     'string.min': errorMessages.validErrUserCreate,
     'string.max': errorMessages.validErrUserCreate,
     'any.required': errorMessages.validErrUserCreate,
-    'string.email': errorMessages.validErrUserCreate,
+    'string.email': errorMessages.validErrUserEmail,
   },
 }), createUser);
 
@@ -39,7 +39,7 @@ router.post('/signin', celebrate({
   messages: {
     'string.empty': errorMessages.authErrWrong,
     'any.required': errorMessages.authErrWrong,
-    'string.email': errorMessages.authErrWrong,
+    'string.email': errorMessages.validErrUserEmail,
   },
 }), login);
 

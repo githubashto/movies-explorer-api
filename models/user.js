@@ -17,6 +17,7 @@ const userSchema = new mongoose.Schema({
     unique: true,
     validate: {
       validator: (v) => isEmail(v),
+      message: errorMessages.validErrUserEmail,
     },
   },
   password: {
