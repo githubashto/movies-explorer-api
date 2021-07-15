@@ -23,8 +23,6 @@ const { PORT = 3000, MONGO_URL = 'mongodb://localhost:27017/bitfilmsdb' } = proc
 
 const mongoose = require('mongoose');
 
-const { isCelebrateError } = require('celebrate');
-
 const helmet = require('helmet');
 
 const { requestLogger, errorLogger } = require('./middlewares/logger');
@@ -35,7 +33,7 @@ const router = require('./routes/index');
 
 const app = express();
 
-const errorMessages = require('./utils/utils');
+const errorHandler = require('./middlewares/error-handler');
 
 mongoose.connect(MONGO_URL, {
   useNewUrlParser: true,
@@ -61,26 +59,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(errorLogger);
 
-app.use((err, req, res, next) => {
-  let { statusCode = 500, message } = err;
-  if (isCelebrateError(err)) {
-    statusCode = 400;
-
-    const errorBody = err.details.has('body')
-      ? err.details.get('body')
-      : err.details.get('params');
-
-    const { details: [errorDetails] } = errorBody;
-    message = errorDetails.message;
-  }
-  res.status(statusCode)
-    .send({
-      message: statusCode === 500
-        ? errorMessages.serverErrDefault
-        : message,
-    });
-  next();
-});
+app.use(errorHandler);
 
 app.listen(PORT, () => {
   console.log(`App listening on port ${PORT}`);
