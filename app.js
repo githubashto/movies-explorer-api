@@ -65,7 +65,11 @@ app.use((err, req, res, next) => {
   let { statusCode = 500, message } = err;
   if (isCelebrateError(err)) {
     statusCode = 400;
-    const errorBody = err.details.get('body');
+
+    const errorBody = err.details.has('body')
+      ? err.details.get('body')
+      : err.details.get('params');
+
     const { details: [errorDetails] } = errorBody;
     message = errorDetails.message;
   }

@@ -51,6 +51,19 @@ router.post('/', celebrate({
     'number.positive': errorMessages.validErrMovieCreate,
   },
 }), createMovie);
-router.delete('/:movieId', deleteMovie);
+router.delete('/:movieId', celebrate({
+  params: Joi.object().keys({
+    param1: Joi.string().hex().length(24).required(),
+  }),
+},
+{
+  messages: {
+    'string.empty': errorMessages.validErrCast,
+    'string.length': errorMessages.validErrCast,
+    'any.required': errorMessages.validErrCast,
+    'string.base': errorMessages.validErrMovieCreate,
+    'string.hex': errorMessages.validErrCast,
+  },
+}), deleteMovie);
 
 module.exports = router;
