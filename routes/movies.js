@@ -53,7 +53,7 @@ router.post('/', celebrate({
 }), createMovie);
 router.delete('/:movieId', celebrate({
   params: Joi.object().keys({
-    param1: Joi.string().hex().length(24).required(),
+    movieId: Joi.string().hex().length(24).required(),
   }),
 },
 {

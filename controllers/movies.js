@@ -62,7 +62,7 @@ module.exports.deleteMovie = (req, res, next) => {
       if (movie.owner._id.toString() !== req.user._id) {
         throw new ForbiddenError(errorMessages.forbidErrMovie);
       }
-      Movie.findByIdAndRemove(req.params.movieId)
+      Movie.remove(movie)
         .orFail()
         .select('country director duration year description image trailer thumbnail movieId nameRU nameEN')
         .then((result) => res.send(result))
