@@ -1,5 +1,9 @@
 const mongoose = require('mongoose');
 
+const isURL = require('validator/lib/isURL');
+
+const errorMessages = require('../utils/utils');
+
 const movieSchema = new mongoose.Schema({
   country: {
     type: String,
@@ -24,17 +28,26 @@ const movieSchema = new mongoose.Schema({
   image: {
     type: String,
     required: true,
-    match: /https?:\/\/(www\.)?[-a-zA-Z\d.]{2,251}\/?[-a-zA-Z\d._~:/?#[\]@!$&'()*+,;=]*/,
+    validate: {
+      validator: (v) => isURL(v),
+      message: errorMessages.validErrUrl,
+    },
   },
   trailer: {
     type: String,
     required: true,
-    match: /https?:\/\/(www\.)?[-a-zA-Z\d.]{2,251}\/?[-a-zA-Z\d._~:/?#[\]@!$&'()*+,;=]*/,
+    validate: {
+      validator: (v) => isURL(v),
+      message: errorMessages.validErrUrl,
+    },
   },
   thumbnail: {
     type: String,
     required: true,
-    match: /https?:\/\/(www\.)?[-a-zA-Z\d.]{2,251}\/?[-a-zA-Z\d._~:/?#[\]@!$&'()*+,;=]*/,
+    validate: {
+      validator: (v) => isURL(v),
+      message: errorMessages.validErrUrl,
+    },
   },
   owner: {
     type: mongoose.Schema.Types.ObjectId,
@@ -42,7 +55,7 @@ const movieSchema = new mongoose.Schema({
     required: true,
   },
   movieId: {
-    type: String,
+    type: Number,
     required: true,
   },
   nameRU: {

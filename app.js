@@ -19,23 +19,21 @@ const corsOptions = {
 
 require('dotenv').config();
 
-const { PORT = 3000, MONGO_URL = 'mongodb://localhost:27017/bitfilmsdb' } = process.env;
-
-const mongoose = require('mongoose');
-
-const { isCelebrateError } = require('celebrate');
+const { PORT = 3000 } = process.env;
 
 const helmet = require('helmet');
 
+const mongoose = require('mongoose');
+const { MONGO_URL } = require('./config');
+
 const { requestLogger, errorLogger } = require('./middlewares/logger');
+const errorHandler = require('./middlewares/error-handler');
 
 const limiter = require('./middlewares/limiter');
 
 const router = require('./routes/index');
 
 const app = express();
-
-const errorMessages = require('./utils/utils');
 
 mongoose.connect(MONGO_URL, {
   useNewUrlParser: true,
@@ -61,22 +59,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(errorLogger);
 
-app.use((err, req, res, next) => {
-  let { statusCode = 500, message } = err;
-  if (isCelebrateError(err)) {
-    statusCode = 400;
-    const errorBody = err.details.get('body');
-    const { details: [errorDetails] } = errorBody;
-    message = errorDetails.message;
-  }
-  res.status(statusCode)
-    .send({
-      message: statusCode === 500
-        ? errorMessages.serverErrDefault
-        : message,
-    });
-  next();
-});
+app.use(errorHandler);
 
 app.listen(PORT, () => {
   console.log(`App listening on port ${PORT}`);

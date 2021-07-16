@@ -14,8 +14,8 @@ const {
 
 router.post('/signup', celebrate({
   body: Joi.object().keys({
-    name: Joi.string().min(2).max(30),
-    email: Joi.string().email(),
+    name: Joi.string().min(2).max(30).required(),
+    email: Joi.string().email().required(),
     password: Joi.string().required(),
   }),
 },
@@ -25,13 +25,13 @@ router.post('/signup', celebrate({
     'string.min': errorMessages.validErrUserCreate,
     'string.max': errorMessages.validErrUserCreate,
     'any.required': errorMessages.validErrUserCreate,
-    'string.email': errorMessages.validErrUserCreate,
+    'string.email': errorMessages.validErrUserEmail,
   },
 }), createUser);
 
 router.post('/signin', celebrate({
   body: Joi.object().keys({
-    email: Joi.string().email(),
+    email: Joi.string().email().required(),
     password: Joi.string().required(),
   }),
 },
@@ -39,7 +39,7 @@ router.post('/signin', celebrate({
   messages: {
     'string.empty': errorMessages.authErrWrong,
     'any.required': errorMessages.authErrWrong,
-    'string.email': errorMessages.authErrWrong,
+    'string.email': errorMessages.validErrUserEmail,
   },
 }), login);
 
