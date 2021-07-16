@@ -20,6 +20,7 @@ router.patch('/me', celebrate({
     'string.min': errorMessages.validErrUserEdit,
     'string.max': errorMessages.validErrUserEdit,
     'string.email': errorMessages.validErrUserEmail,
+    'any.required': errorMessages.validErrUserEdit,
   },
 }), updateUserInfo);
 
