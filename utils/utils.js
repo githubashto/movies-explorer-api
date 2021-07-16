@@ -15,6 +15,7 @@ const errorMessages = {
   conflictErrEdit: 'Такой email уже занят.',
   forbidErrMovie: 'Фильм с указанным _id не найден.',
   badErrLogin: 'Переданы некорректные данные при попытке входа.',
+  tooManyReq: 'Слишком много запросов, попробуйте позже.',
 };
 
 module.exports = errorMessages;
