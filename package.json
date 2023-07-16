@@ -36,7 +36,7 @@
     "jsonwebtoken": "^9.0.1",
     "mongoose": "^7.3.2",
     "validator": "^13.9.0",
-    "winston": "^3.9.0"
+    "winston": "^3.10.0"
   },
   "devDependencies": {
     "eslint": "^8.44.0",
