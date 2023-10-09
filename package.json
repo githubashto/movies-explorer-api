@@ -37,7 +37,7 @@
     "mongoose": "^7.4.3",
     "mongoose": "^7.5.2",
     "validator": "^13.11.0",
-    "winston": "^3.10.0"
+    "winston": "^3.11.0"
   },
   "devDependencies": {
     "eslint": "^8.49.0",
