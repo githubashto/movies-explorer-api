@@ -25,7 +25,7 @@
   },
   "homepage": "https://github.com/githubashto/movies-explorer-api#readme",
   "dependencies": {
-    "bcryptjs": "^2.4.3",
+    "bcryptjs": "^3.0.2",
     "celebrate": "^15.0.3",
     "cors": "^2.8.5",
     "express": "^4.21.2",
